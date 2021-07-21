@@ -29,4 +29,9 @@ class Flashcard(models.Model):
     def delete_flashcard(self):
         self.delete()
 
+    @classmethod
+    def update_flashcard(cls, id, title):
+        flashcard = cls.objects.filter(id = id).update(flash_title = title)
+        return flashcard 
+
     
