@@ -1,11 +1,14 @@
+from django.db.models.fields import CharField
 from rest_framework import serializers
 from .models import Subject,Flashcard
+from flashcardApp import models
 
-class FlashcardSerializer(serializers.ModelSerializer):
-    subject = serializers.SlugRelatedField(
-        queryset=Subject.objects.all(), slug_field='subject_name'
-    )
 
-    class Meta:
-        model = Flashcard
-        fields = ('id', 'subject', 'flash_title', 'flash_notes', 'created', 'updated')
+class FlashcardSerializer(serializers.Serializer):
+    flash_title = serializers.CharField()
+    flash_notes= serializers.CharField()
+    subject_id = serializers.IntegerField()
+
+    def create(self, validated_data):
+        return Flashcard.objects.create(**validated_data)
+    
