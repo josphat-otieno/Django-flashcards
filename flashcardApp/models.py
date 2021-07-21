@@ -8,6 +8,12 @@ class Subject(models.Model):
     def __str__(self):
         return self.subject_name
 
+    def save_subject(self):
+        self.save()
+
+    def delete_subject(self):
+        self.delete()
+
 class Flashcard(models.Model):
     flash_image = models.ImageField(upload_to='images/')
     flash_title = models.CharField(max_length=60 )
