@@ -6,9 +6,11 @@ from django.conf import settings
 
 urlpatterns=[
     url(r'^$',views.index, name='index'),
-    url('register/',views.register, name='registration'),
+    # url('register/',views.register, name='registration'),
+    url('register/', views.register, name='signup'),
     url('login/',auth_views.LoginView.as_view(), name='login'),
     url('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
+    url('profile/',views.profile, name='profile'),
 ]
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
