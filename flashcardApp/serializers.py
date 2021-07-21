@@ -8,4 +8,4 @@ class FlashcardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Flashcard
-        fields = ('id', 'subject', 'text', 'created', 'updated')
+        fields = ('id', 'subject', 'flash_title', 'flash_notes', 'created', 'updated')
