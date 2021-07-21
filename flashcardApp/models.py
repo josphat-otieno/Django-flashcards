@@ -22,3 +22,11 @@ class Flashcard(models.Model):
 
     def __str__(self):
         return self.flash_title
+
+    def save_flashcard(self):
+        self.save()
+
+    def delete_flashcard(self):
+        self.delete()
+
+    
