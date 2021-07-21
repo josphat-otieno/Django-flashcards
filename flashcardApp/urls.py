@@ -7,7 +7,8 @@ from .import views
 from .views import FlashcardView
 
 urlpatterns = [
-    path('flashcard/', FlashcardView.as_view()),
+    url(r'^$',views.index, name='index'),
+    path('api/flashcard/', FlashcardView.as_view(), name='FlashcardView'),
     # url(r'^api/v1/posts/$', 'post_collection'),
 ]
 

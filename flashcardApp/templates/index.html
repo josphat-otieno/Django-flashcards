@@ -1,1 +1,6 @@
 <h1>Welcome to flashcards</h1>
+
+{% for flashcard in flashcards %}
+<h1>{{flashcard.flash_title}}</h1>
+<p>{{flashcard.flash_notes}}</p>
+{% endfor %}

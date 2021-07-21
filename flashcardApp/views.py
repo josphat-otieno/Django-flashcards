@@ -12,7 +12,10 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 # Create your views here.
 
+def index(request):
+    flashcards = Flashcard.objects.all()
 
+    return render (request, 'index.html', {"flashcards": flashcards})
 
 class FlashcardView(APIView):
     def get(self, request):
