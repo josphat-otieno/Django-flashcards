@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'flashcardApp',
     'rest_framework',
     'bootstrap3',
+    
 ]
 
 MIDDLEWARE = [
