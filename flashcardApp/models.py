@@ -16,7 +16,7 @@ class Subject(models.Model):
 
 class Flashcard(models.Model):
     flash_title = models.CharField(max_length=60 )
-    flash_notes = models.TextField()
+    flash_notes = models.CharField(max_length=255)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now=True)
     update = models.DateTimeField(auto_now_add=True)
