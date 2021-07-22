@@ -9,7 +9,7 @@ from .views import FlashcardView, FlashMember
 urlpatterns = [
     url(r'^$',views.index, name='index'),
     path('api/flashcard/', FlashcardView.as_view(), name='FlashcardView'),
-    url(r'^api/flashcard/(?P<pk>[0-9]+)/$',FlashMember.as_view()),
+    path('api/flashcards/(?P<pk>[0-9]+)/$',FlashMember.as_view()),
     # path('api/flashcard/<int:pk>', FlashcardView.as_view()),
     # path('api/flashcard/<int:pk>', SingleFlashcardView.as_view()),
     # url(r'^api/v1/posts/$', 'post_collection'),

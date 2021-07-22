@@ -25,6 +25,19 @@ class FlashcardSerializer(serializers.ModelSerializer):
             return Flashcard.objects.create(**validated_data)
 
 
+class SubjectSerializer(serializers.Serializer):
+        subject_name=serializers.CharField()
+
+        verbose_subject_name = serializers.CharField(read_only=True)
+        # DRF serializer.save() calls self.create(self.validated_data)
+        def create(self, validated_data):
+            return Subject.objects.create(**validated_data)
+
+        def update(self, instance, validated_data):
+            for key,value in validated_data.items():
+                setattr(instance,key, value)
+                instance.save()
+            return instance
         
     # def update(self, instance, validated_data):
     #     instance.flash_title = validated_data.get('flash_title', instance.flash_title)

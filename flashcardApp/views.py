@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .models import  Subject, Flashcard
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import FlashcardSerializer
+from .serializers import FlashcardSerializer, SubjectSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView,ListCreateAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
@@ -19,6 +19,54 @@ def index(request):
 
     return render (request, 'index.html', {"flashcards": flashcards})
 
+
+
+@api_view(['GET','POST',])
+def flash_view(request):
+    if request.method =='GET':
+        subjects = Subject.objects.all()
+        serializer = SubjectSerializer(subjects, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = SubjectSerializer(data = request.data)
+        if serializer.is_valid():
+            # subject_name = serializer.data['subject_name']
+            # Subject.objects.create(**serializer.validated_data)
+            subject = serializer.save()
+            return Response(SubjectSerializer(subject).data, status=status.HTTP_201_CREATED)
+            # return Response("Subject added", status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PATCH', 'DELETE'])
+def flash_detail_view(request, subject_id):
+    subject = get_object_or_404(Subject, pk=subject_id)
+    if request.method == 'GET':
+        serializer = SubjectSerializer(subject)
+        return Response(serializer.data)
+    elif request.method == 'PATCH':
+        serializer = SubjectSerializer(subject, data=request.data, partial=True)
+        if serializer.is_valid():
+            subject = serializer.save()
+            return Response(SubjectSerializer(subject).data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # raise NotImplementedError("Patch currently not supported")
+
+    elif request.method == 'DELETE':
+        subject.delete()
+        return Response ("Subject deleted", status=status.HTTP_204_NO_CONTENT)
+        # raise NotImplementedError("DELETE currenty not supported")
+
+@api_view(['POST'])      
+def flashcard_view(request, subject_id):
+    subject = get_object_or_404(Subject, pk=subject_id)
+    serializer = FlashcardSerializer(data=request.data)
+    if serializer.is_valid():
+        flashcard = serializer.save(subject=subject)
+        return Response(FlashcardSerializer(flashcard).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class FlashcardView(generics.ListCreateAPIView):
     queryset = Flashcard.objects.all()
