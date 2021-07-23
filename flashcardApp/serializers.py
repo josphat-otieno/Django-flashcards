@@ -1,48 +1,37 @@
-from django.db.models import fields
-from django.db.models.fields import CharField
-from rest_framework import generics, serializers
-from .models import Subject,Flashcard
-from flashcardApp import models
+from rest_framework import serializers
+from  .models import Subject, Flashcard
 
 
+# class SubjectListPageSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only = True)
 
-class FlashcardSerializer(serializers.ModelSerializer):
+class FlashcardSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    flash_title = serializers.CharField()
+    flash_notes = serializers.CharField()
 
-    subject = serializers.SlugRelatedField(
-        queryset=Subject.objects.filter(), slug_field='subject_name'
-    )
-    class Meta:
-        model = Flashcard
-        fields = ('id', 'subject' ,'flash_title', 'flash_notes', )
-
-
-        # flash_title = serializers.CharField()
-        # flash_notes= serializers.CharField()
-        # subject_id = serializers.IntegerField()
-        
-        
-        def create(self, validated_data):
-            return Flashcard.objects.create(**validated_data)
-
+    def create(self, validated_data):
+        return Flashcard.objects.create(**validated_data)
 
 class SubjectSerializer(serializers.Serializer):
-        subject_name=serializers.CharField()
+    id = serializers.IntegerField(read_only=True)
+    subject_name=serializers.CharField()
 
-        verbose_subject_name = serializers.CharField(read_only=True)
-        # DRF serializer.save() calls self.create(self.validated_data)
-        def create(self, validated_data):
-            return Subject.objects.create(**validated_data)
+    flashcards = FlashcardSerializer(many=True, read_only=True)
+    flashcard = FlashcardSerializer(write_only=True, required=False)
 
-        def update(self, instance, validated_data):
-            for key,value in validated_data.items():
-                setattr(instance,key, value)
-                instance.save()
-            return instance
-        
-    # def update(self, instance, validated_data):
-    #     instance.flash_title = validated_data.get('flash_title', instance.flash_title)
-    #     instance.flash_notes = validated_data.get('flash_notes', instance.flash_notes)
-    #     instance.subject_id = validated_data.get('subject_id', instance.subject_id)
+    # verbose_subject_name = serializers.CharField(read_only=True)
+    # DRF serializer.save() calls self.create(self.validated_data)
+    def create(self, validated_data):
+        flash_dict =validated_data['flashcard']
+        subject = Subject.objects.create(**validated_data)
+        flash_dict['subject']=subject
+        Flashcard.objects.create(**flash_dict)
+        return subject
 
-    #     instance.save()
-    #     return instance
+    def update(self, instance, validated_data):
+        for key,value in validated_data.items():
+            setattr(instance,key, value)
+        instance.save()
+        return instance
+
